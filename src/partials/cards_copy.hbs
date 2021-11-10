@@ -1,0 +1,24 @@
+{{#each src}}
+<li id="card" class="gallery__item">
+  <div class="photo-card">
+    <img src="{{0}}" alt="" />
+
+    <div class="stats">
+      <p class="stats-item">
+        <i class="material-icons">
+          thumb_up
+        </i>
+        
+        {{1}}
+      </p>
+      <p class="stats-item">
+        <i class="material-icons">
+          face
+        </i>
+        <a class="link" href="{{3}}">{{2}}</a>
+      </p>
+      
+    </div>
+  </div>
+</li>
+{{/each}}
