@@ -15,10 +15,13 @@ defaults.delay = 1000;
 const refs = {
   cardsList: document.querySelector('.gallery'),
   card: document.querySelector('.gallery__item'),
+  img: document.querySelector('.img-size'),
   searchForm: document.querySelector('#search-form'),
   searchBtn: document.querySelector('.button'),
   nextBtn:document.querySelector('[data-next]'),
-  input: document.querySelector('[data-input]')
+  input: document.querySelector('[data-input]'),
+  title: document.querySelector('.title')
+
 }
 
 const getImgFromApi = async (query, page, photos) => {
@@ -31,74 +34,105 @@ const getImgFromApi = async (query, page, photos) => {
   return response;
   } catch {
     console.log('error');
+    alert({
+    text: 'alert'
+  })
   }
 
 }
-refs.searchBtn.addEventListener('click', onClick)
 refs.nextBtn.addEventListener('click', onPressBtn)
+  refs.searchBtn.addEventListener('click', onSearchClick)
 
-function onClick(e) {
+
+
+
+  function onSearchClick(e) {
   e.preventDefault()
-  // console.log(refs.searchForm.firstElementChild.value);
-  
-  let inputValue = refs.searchForm.firstElementChild.value;
-  (async () => {
-  return await getImgFromApi(inputValue, 1,  9)
-})().then(photo => {
-  let src = {};
-  src.person = []
-  // src.push(photoSrc, id, photographer)
-  try {
-    // console.log(photo.photos);
-    photo.photos.forEach((e, i) => {
-     src.person = [e.src.medium, e.id, e.photographer, e.photographer_url]
-refs.cardsList.insertAdjacentHTML('beforeend', cardsTplCopy({src}))
-    });
-    // refs.cardsList.insertAdjacentHTML('beforeend', cardsTpl({ src }))
-      refs.searchBtn.classList.add('invisible');
-    refs.input.classList.add('input-position')
-    
-  refs.nextBtn.classList.remove('invisible');
-    refs.searchForm.addEventListener('input', debounce(onInput, 500))
-  } catch {
-    console.log('error on click');
-  }
-  
-})
+  refs.title.classList.remove("visible")
+    let inputValue = refs.searchForm.firstElementChild.value;
+     
+    (async () => await getImgFromApi(inputValue, 1, 9))()
+      .then(photo => {
+        
+        if (photo.total_results === 0) {
+          alert({text: 'alert onSearchClick'})
+          return refs.nextBtn.classList.add('invisible');
+        }
+        
+          let src = {};
+        src.person = []
+          
+          setTimeout(() => {
+            try {
+          photo.photos.forEach((e) => {
+            src.person = [e.src.medium, e.id, e.photographer, e.photographer_url]
+          
+            refs.cardsList.insertAdjacentHTML('beforeend', cardsTplCopy({ src }))
+            
+          });
+        
+        refs.cardsList.addEventListener('click', onMouseOver)
+
+          function onMouseOver(e) {
+        
+      }
+
+          refs.searchBtn.classList.add('invisible');
+          refs.input.classList.add('input-position')
+          refs.nextBtn.classList.remove('invisible');
+          refs.searchForm.addEventListener('input', debounce(onInput, 500))
+          } catch {
+            refs.nextBtn.classList.add('invisible');
+            alert({text: 'alert'})
+          }
+          }, 1000);
+        })
 }
+
 
 function onInput(e){
   
-  refs.cardsList.innerHTML = '';
+  
   let inputValue = refs.searchForm.firstElementChild.value;
   (async () => {
-    
+    refs.cardsList.innerHTML = '';
   return await getImgFromApi(inputValue,1,  9)
-})().then(photo => {
+  })().then(photo => {
+   if (photo.total_results === 0) {
+
+      alert({
+          text: 'alert onInput'
+        })
+      refs.nextBtn.classList.add('invisible');
+      return;
+      
+  }
   let src = {};
+  try {
   if (photo.photos.length !== 0) {
     src.person = []
   // src.push(photoSrc, id, photographer)
-  try {
+  
     // console.log(photo.photos);
     photo.photos.forEach((e, i) => {
      src.person = [e.src.medium, e.id, e.photographer, e.photographer_url]
 refs.cardsList.insertAdjacentHTML('beforeend', cardsTplCopy({src}))
     });
-    // try {
-    // console.log(src);
-    // photo.photos.forEach(e=> src.push(e.src.tiny));
-    // refs.cardsList.insertAdjacentHTML('beforeend', cardsTpl({ src }))
+    
+    
     refs.nextBtn.classList.remove('invisible');
+    }
   } catch {
-    refs.nextBtn.classList.add('invisible');
+    refs.nextBtn.classList.remove('invisible');
     console.log('error on input');
+    
+    alert({
+    text: 'alert'
+  })
   }
-  }
-  refs.nextBtn.classList.add('invisible');
-  // alert({
-  //   text: 'alert'
-  // })
+  
+  // refs.nextBtn.classList.add('invisible');
+  
   
   
   
