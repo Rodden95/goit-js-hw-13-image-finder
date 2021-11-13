@@ -1,0 +1,65 @@
+/*Properties*/
+$size: 2;
+$colorOfRound: rgb(179, 177, 177);
+$colorOfStick: rgb(253, 252, 252);
+.load-sphere-cont {
+  scroll-behavior: smooth;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  right: 0;
+  background-color: rgba(white, 0.4);
+}
+.load-sphere {
+  opacity: 0.2;
+  position: absolute;
+  // margin: 0 auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px * $size;
+  height: 150px * $size;
+  border-radius: 50%;
+  background-color: $colorOfRound;
+  .stick {
+    // width: 75px;
+    // height: 10px;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    // left: 50%;
+    // top: 50%;
+
+    // width: 0;
+    // height: 0;
+    border-top: 60px * $size solid transparent;
+    border-right: 75px * $size solid $colorOfStick;
+    border-bottom: 60px * $size solid transparent;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+
+    transform-origin: left;
+
+    // transform: translateY(-50%);
+    animation-name: stick_rotate;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: 500ms;
+    animation-direction: running;
+    // animation-fill-mode: running;
+    // background-color: #000;
+  }
+  .round {
+    position: absolute;
+    width: 120px * $size;
+    height: 120px * $size;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    background-color: rgba($colorOfRound, 1);
+  }
+}

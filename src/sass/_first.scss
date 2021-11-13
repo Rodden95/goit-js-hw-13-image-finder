@@ -18,6 +18,8 @@
 }
 
 body {
+  width: 1200px;
+  margin: 0 auto;
   background-color: rgb(255, 225, 225);
   background-size: cover;
   background-repeat: repeat-y;
@@ -35,57 +37,12 @@ body {
     opacity: 0;
     transition: opacity 200ms linear;
   }
-  .load-sphere {
-    opacity: 0.4;
-    position: fixed;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background-color: rgba(rgb(196, 196, 196), 1);
-    .stick {
-      // width: 75px;
-      // height: 10px;
-      position: absolute;
-      top: 15px;
-      left: 75px;
-      // left: 50%;
-      // top: 50%;
 
-      width: 0;
-      height: 0;
-      border-top: 60px solid transparent;
-      border-right: 75px solid #959fb0;
-      border-bottom: 60px solid transparent;
-      border-top-right-radius: 50%;
-      border-bottom-right-radius: 50%;
-
-      transform-origin: left;
-
-      // transform: translateY(-50%);
-      animation-name: stick_rotate;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-      animation-duration: 2s;
-      animation-direction: running;
-      // animation-fill-mode: running;
-      // background-color: #000;
-    }
-    .round {
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 3;
-      background-color: rgba(rgb(196, 196, 196), 1);
-    }
-  }
   .visible {
     opacity: 1;
   }
 }
+
 .search-form {
   display: inline;
   input {
@@ -132,14 +89,16 @@ body {
   }
 
   .bottom-position {
+    z-index: 4;
     border: none;
     box-shadow: 1px 1px 4px 2px #000;
     border-radius: 20px;
     padding: 6px 25px;
     position: absolute;
-    bottom: -40px;
+
     left: 50%;
     transform: translateX(-50%);
+    top: 100%;
   }
 }
 .invisible {
@@ -151,6 +110,7 @@ body {
   // top: -30px;
 }
 .gallery {
+  z-index: 1;
   width: 100%;
   display: -ms-grid;
   display: grid;

@@ -1,9 +1,11 @@
 // import fetchApi from './fetch'
 import { createClient } from 'pexels';
 import 'regenerator-runtime/runtime'
-import cardsTpl from './partials/cards.hbs'
 import cardsTplCopy from './partials/cards_copy.hbs'
+import {Toast} from '../node_modules/bootstrap/dist/js/bootstrap.esm.min'
 
+  Array.from(document.querySelectorAll('.toast'))
+    .forEach(toastNode => new Toast(toastNode))
 import { debounce } from 'lodash';
 import { alert, defaultModules, defaults } from '../node_modules/@pnotify/core/dist/PNotify.js';
 import * as PNotifyMobile from '../node_modules/@pnotify/mobile/dist/PNotifyMobile.js';
@@ -11,7 +13,7 @@ import '../node_modules/@pnotify/core/dist/BrightTheme.css';
 
 defaultModules.set(PNotifyMobile, {});
 defaults.delay = 1000;
-      
+console.log(bootstrap)
 const refs = {
   cardsList: document.querySelector('.gallery'),
   card: document.querySelector('.gallery__item'),
@@ -20,7 +22,10 @@ const refs = {
   searchBtn: document.querySelector('.button'),
   nextBtn:document.querySelector('[data-next]'),
   input: document.querySelector('[data-input]'),
-  title: document.querySelector('.title')
+  title: document.querySelector('.title'),
+  container: document.querySelector ('.container'),
+  loadSphere: document.querySelector('.load-sphere-cont')
+
 
 }
 
@@ -40,18 +45,20 @@ const getImgFromApi = async (query, page, photos) => {
   }
 
 }
+
 refs.nextBtn.addEventListener('click', onPressBtn)
   refs.searchBtn.addEventListener('click', onSearchClick)
-
-
-
-
+  let loadSphereTml = document.createElement('div');
+loadSphereTml.classList.add('load-sphere-cont')
+loadSphereTml.innerHTML = '<div class="load-sphere"><div class="stick"></div><div class="round"></div></div>'
   function onSearchClick(e) {
-  e.preventDefault()
+    e.preventDefault()
+    refs.container.insertBefore(loadSphereTml, refs.title)
   refs.title.classList.remove("visible")
     let inputValue = refs.searchForm.firstElementChild.value;
      
-    (async () => await getImgFromApi(inputValue, 1, 9))()
+    setTimeout(() => {
+      (async () => await getImgFromApi(inputValue, 1, 9))()
       .then(photo => {
         
         if (photo.total_results === 0) {
@@ -61,8 +68,8 @@ refs.nextBtn.addEventListener('click', onPressBtn)
         
           let src = {};
         src.person = []
-          
-          setTimeout(() => {
+
+          // setTimeout(() => {
             try {
           photo.photos.forEach((e) => {
             src.person = [e.src.medium, e.id, e.photographer, e.photographer_url]
@@ -85,34 +92,40 @@ refs.nextBtn.addEventListener('click', onPressBtn)
             refs.nextBtn.classList.add('invisible');
             alert({text: 'alert'})
           }
-          }, 1000);
-        })
+          // }, 1000);
+      })
+      loadSphereTml.remove();
+      
+    }, 2000);
+    
 }
 
 
 function onInput(e){
-  
-  
+  console.log(e.target);
+  refs.container.insertBefore(loadSphereTml, refs.title)
   let inputValue = refs.searchForm.firstElementChild.value;
-  (async () => {
-    refs.cardsList.innerHTML = '';
+  setTimeout(() => {
+    (async () => {
+    
   return await getImgFromApi(inputValue,1,  9)
   })().then(photo => {
-   if (photo.total_results === 0) {
+    
+     if (photo.total_results === 0) {
 
       alert({
           text: 'alert onInput'
         })
-      refs.nextBtn.classList.add('invisible');
-      return;
+     return refs.nextBtn.classList.add('invisible');
       
-  }
+      }
+   
   let src = {};
   try {
   if (photo.photos.length !== 0) {
     src.person = []
   // src.push(photoSrc, id, photographer)
-  
+  refs.cardsList.innerHTML = '';
     // console.log(photo.photos);
     photo.photos.forEach((e, i) => {
      src.person = [e.src.medium, e.id, e.photographer, e.photographer_url]
@@ -130,23 +143,27 @@ refs.cardsList.insertAdjacentHTML('beforeend', cardsTplCopy({src}))
     text: 'alert'
   })
   }
-  
+  loadSphereTml.remove();
   // refs.nextBtn.classList.add('invisible');
   
   
   
   
 })
+  }, 2000)
 }
   let page = 2;
 
 function onPressBtn(e) {
+
   e.preventDefault();
-  
+  refs.container.insertBefore(loadSphereTml, refs.title)
+  // console.log(e.currentTarget);
   let inputValue = refs.searchForm.firstElementChild.value;
   page++;
   
-  (async () => {
+  setTimeout(() => {
+    (async () => {
     
   return await getImgFromApi(inputValue, page, 9)
 })().then(photo => {
@@ -165,11 +182,12 @@ refs.cardsList.insertAdjacentHTML('beforeend', cardsTplCopy({src}))
     refs.nextBtn.classList.add('invisible');
     console.log('errorRRR');
   }
-  
-      
+  loadSphereTml.remove();
 
   
 })
+  }, 2000)
+  
   setTimeout(() => {
     // refs.nextBtn.scrollIntoView(true);
     try {
